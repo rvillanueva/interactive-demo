@@ -20,24 +20,26 @@
 
 <body>
   <div class="navbar">
+    <div class="navbar-brand">INTERACTIVE</div>
   </div>
   <div class="content-container">
     <div class="row">
       <div class="col-md-4">
-        <div class="panel padded">
-          Date Range <span id="data-date-range"></span>
+        <div class="data-panel panel padded">
+          <h2 class="data-panel-title">Date Range</h2>
+            <span id="data-date-range" class="data-panel-number"></span>
         </div>
       </div>
       <div class="col-md-4">
-        <div class="panel padded">
-          Customers Per Day
-          <span id="data-customer-average"></span>
+        <div class="data-panel panel padded">
+          <h2 class="data-panel-title">Avg Daily Customers</h2>
+          <span id="data-customer-average" class="data-panel-number"></span>
         </div>
       </div>
       <div class="col-md-4">
-        <div class="panel padded">
-          Average Engagement Per Day (mins)
-          <span id="data-engagement"></span>
+        <div class="data-panel panel padded">
+          <h2 class="data-panel-title">Avg Engagement (mins)</h2>
+          <span id="data-engagement" class="data-panel-number"></span>
         </div>
       </div>
 
@@ -45,10 +47,33 @@
   <div class="splash-chart-container padded">
     <canvas id="engagement-chart"></canvas>
   </div>
-
-  <div class="panel padded">
+<div class="row padded">
+    <div class="col-md-6">
     <textarea id="event-output" class="event-output-input" rows="20" cols="40"></textarea>
-    <button onClick="loadFromTextarea();processData()">Run</button>
+  </div>
+  <div class="col-md-6">
+    <strong>Parsing</strong>
+    <br>
+    Passed: <span id="parsed-passed"></span><br>
+    Failed: <span id="parsed-failed"></span><br>
+    <br><br>
+    <strong>Sensor Errors</strong>
+    <br>
+    Passed: <span id="sensor-passed"></span><br>
+    Failed: <span id="sensor-failed"></span><br>
+
+    <br><br>
+    <strong>Timezone UTC offset</strong>
+    <input id="timezone-offset" type="number" value="-5">
+    <br><br>
+    <strong>Customer gap threshold (seconds)</strong>
+    <input id="time-threshold" type="number" value="60">
+    <br><br>
+    <strong>Sensor error threshold (events)</strong>
+    <input id="sensor-threshold" type="number" value="30">
+    <br><br>
+    <button onClick="loadConfig();processInput()">Run</button>
+  </div>
   </div>
 </div>
 
