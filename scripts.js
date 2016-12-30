@@ -233,7 +233,7 @@ function generateCharts(customers) {
 
   function buildChart() {
     var ctx = document.getElementById("engagement-chart");
-    ctx.canvas.getContext("2d").height = 500;
+    ctx.getContext("2d").height = 500;
     chart = new Chart(ctx, {
       type: 'bar',
       data: chartData,
