@@ -2,48 +2,64 @@
 <!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
 <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
 <!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <base href="/">
-    <title>Interactive Demo</title>
-    <meta name="description" content="Demo for Interactive company.">
-    <meta name="viewport" content="width=device-width">
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="grid.css">
-  </head>
-  <body>
+<!--[if gt IE 8]><!-->
+<html class="no-js">
+<!--<![endif]-->
 
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <base href="/">
+  <title>Interactive Demo</title>
+  <meta name="description" content="Demo for Interactive company.">
+  <meta name="viewport" content="width=device-width">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="grid.css">
+  <link href="https://fonts.googleapis.com/css?family=Raleway" rel="stylesheet">
+</head>
+
+<body>
+  <div class="navbar">
+  </div>
+  <div class="content-container">
     <div class="row">
       <div class="col-md-4">
-        <div class="panel">
-          Days
-          <br>
-          Customers Per Day<br>
-          Average Engagement Per Day
+        <div class="panel padded">
+          Date Range <span id="data-date-range"></span>
         </div>
       </div>
-      <div class="col-md-6">
-        <div id="engagement-chart">
+      <div class="col-md-4">
+        <div class="panel padded">
+          Customers Per Day
+          <span id="data-customer-average"></span>
+        </div>
       </div>
+      <div class="col-md-4">
+        <div class="panel padded">
+          Average Engagement Per Day (mins)
+          <span id="data-engagement"></span>
+        </div>
+      </div>
+
     </div>
-    <!--[if lt IE 7]>
+  <div class="splash-chart-container padded">
+    <canvas id="engagement-chart"></canvas>
+  </div>
+
+  <div class="panel padded">
+    <textarea id="event-output" class="event-output-input" rows="20" cols="40"></textarea>
+    <button onClick="loadFromTextarea();processData()">Run</button>
+  </div>
+</div>
+
+  <!--[if lt IE 7]>
       <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
-    <![endif]-->
+  <![endif]-->
 
-    <script>
-      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.17.1/moment.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.bundle.min.js"></script>
+  <script src="scripts.js"></script>
 
-      ga('create', 'UA-XXXXX-X');
-      ga('send', 'pageview');
-    </script>
-    <script src="scripts.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.17.1/moment.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.bundle.min.js"></script>
+</body>
 
-  </body>
 </html>

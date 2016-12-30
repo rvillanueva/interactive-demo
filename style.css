@@ -1,0 +1,24 @@
+body {
+  font-family: 'Raleway', 'Helvetica Neue', Helvetica, sans-serif;
+}
+
+.content-container {
+  padding: 20px;
+}
+
+.splash-chart-container{
+  height: 500px;
+}
+
+.event-output-input {
+  height: 500px;
+}
+
+.panel {
+  box-shadow: 0.75px 0.75px 0.75px 0.75px rgba(125, 125, 125, 0.2);
+  border-radius: 4px;
+}
+
+.padded {
+  padding: 20px;
+}
