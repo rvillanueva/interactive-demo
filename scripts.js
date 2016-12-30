@@ -238,6 +238,8 @@ function generateCharts(customers) {
       type: 'bar',
       data: chartData,
       options: {
+        responsive: true,
+        maintainAspectRatio: false,
         scales: {
           yAxes: [{
             id: 'A',
