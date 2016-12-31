@@ -16,7 +16,7 @@ var data, chartData, chart;
 
 function loadEvents(done) {
   var client = new XMLHttpRequest();
-  client.open('GET', '/interactive-demo/events_output.txt');
+  client.open('GET', 'events_output.txt');
   client.onreadystatechange = function() {
     if (client.readyState == 4 && client.status == 200 && client.responseText) {
       done(client.responseText);
