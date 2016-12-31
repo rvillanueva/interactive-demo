@@ -13,8 +13,8 @@
   <title>Interactive Demo</title>
   <meta name="description" content="Demo for Interactive company.">
   <meta name="viewport" content="width=device-width">
-  <link rel="stylesheet" href="/interactive-demo/style.css">
-  <link rel="stylesheet" href="/interactive-demo/grid.css">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="grid.css">
   <link href="https://fonts.googleapis.com/css?family=Raleway" rel="stylesheet">
 </head>
 
@@ -38,7 +38,7 @@
       </div>
       <div class="col-md-4">
         <div class="data-panel panel padded">
-          <h2 class="data-panel-title">Avg Engagement (mins)</h2>
+          <h2 class="data-panel-title">Avg Engagement</h2>
           <span id="data-engagement" class="data-panel-number"></span>
         </div>
       </div>
@@ -72,7 +72,7 @@
     <strong>Sensor error threshold (events)</strong>
     <input id="sensor-threshold" type="number" value="30">
     <br><br>
-    <button onClick="loadConfig();processInput()">Run</button>
+    <button onClick="runAnalysis()">Run</button>
   </div>
   </div>
 </div>
@@ -83,7 +83,7 @@
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.17.1/moment.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.bundle.min.js"></script>
-  <script src="/interactive-demo/scripts.js"></script>
+  <script src="scripts.js"></script>
 
 </body>
 

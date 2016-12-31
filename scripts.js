@@ -8,15 +8,15 @@ var config = {
   colors: ['#94aafb', '#a4e675']
 }
 
-//  Interactive brand colors: ['#708CF8', '#7AC943']
+//  Brand colors: ['#708CF8', '#7AC943']
 
-var log, customers, failed, eventOutput, data, chartData, chart;
+var data, chartData, chart;
 
 // Load events from static text file
 
 function loadEvents(done) {
   var client = new XMLHttpRequest();
-  client.open('GET', '/interactive-demo/events_output.txt');
+  client.open('GET', 'events_output.txt');
   client.onreadystatechange = function() {
     if (client.readyState == 4 && client.status == 200 && client.responseText) {
       done(client.responseText);
@@ -26,9 +26,8 @@ function loadEvents(done) {
 }
 
 loadEvents(function(data) {
-  eventOutput = data;
   updateEventInput(data);
-  processInput();
+  processInput(data);
 });
 
 // Updating DOM with loaded text file
@@ -39,17 +38,18 @@ function updateEventInput(text) {
 
 // Load config file from DOM settings when running manually
 
-function loadConfig() {
-  eventOutput = document.getElementById("event-output").value;
+function runAnalysis() {
+  var eventOutput = document.getElementById("event-output").value;
   config.timeThreshold = Number(document.getElementById("time-threshold").value);
   config.sensorThreshold = Number(document.getElementById("sensor-threshold").value);
   config.timezoneOffset = Number(document.getElementById("timezone-offset").value);
+  processInput(eventOutput);
 }
 
 // Process event output data
 
-function processInput() {
-  if (!eventOutput) {
+function processInput(text) {
+  if (!text) {
     alert('Please copy event output file into the text area before running.')
     return false;
   }
@@ -70,20 +70,23 @@ function processInput() {
       dailyCustomers: '',
       averageEngagement: ''
     }
-  }
-  log = parseEventLog(eventOutput);
-  var uncleaned = splitCustomers(log);
-  customers = clearSensorErrors(uncleaned);
+  };
+
+  var eventLog = parseEventLog(text);
+  var allCustomers = splitCustomers(eventLog);
+  var customers = clearSensorErrors(allCustomers);
   generateCharts(customers);
   calculateMetrics();
   updateDOM();
 
+  // Convert the raw text into an array of Dates
   function parseEventLog(input) {
     var split = input.split('\n');
     var arr = [];
     for (var i = 0; i < split.length; i++) {
       var string = split[i] + 'z'; // setting these times are UTC, because it would be weird for people to be interacting at 2am Eastern
       var date = new Date(string);
+      // Update data log
       if (!isNaN(date)) {
         arr.push(date);
         data.parsed.passed++;
@@ -94,6 +97,7 @@ function processInput() {
     return arr;
   }
 
+  // Create a new customer bucket when the last event is older than the time cutoff
   function splitCustomers(log) {
     var res = [];
     var lastTime;
@@ -112,23 +116,22 @@ function processInput() {
 
   // Clear customers who have more than a certain number of events
   function clearSensorErrors(customers) {
-    var res = {
-      passed: [],
-      failed: []
-    };
+    var passed = [];
+    var failed = [];
     for (var i = 0; i < customers.length; i++) {
       var customer = customers[i];
       if (customer.events.length <= config.sensorThreshold) {
-        res.passed.push(customer);
+        passed.push(customer);
       } else {
-        res.failed.push(customer)
+        failed.push(customer)
       }
     }
+    // Update data logs
     data.cleaned = {
-      passed: res.passed.length,
-      failed: res.failed.length
+      passed: passed.length,
+      failed: failed.length
     }
-    return res.passed;
+    return passed;
   }
 }
 
@@ -136,7 +139,7 @@ function processInput() {
 
 // Generate charts for display on webpage
 function generateCharts(customers) {
-  if(chart){
+  if (chart) {
     chart.destroy();
   }
   var buckets = [];
@@ -154,13 +157,10 @@ function generateCharts(customers) {
       data: []
     }]
   }
-
   generateTimeBuckets();
   attachCustomerData();
   populateChartData();
   buildChart();
-  console.log(buckets);
-  console.log(chartData);
 
   // Convert everything to UTC for easier bucket analysis
   function offsetDate(date) {
@@ -168,13 +168,17 @@ function generateCharts(customers) {
     return date;
   }
 
+  // Generate buckets for each day
   function generateTimeBuckets() {
     var startTime = customers[0].events[0];
     var lastCustomer = customers[customers.length - 1];
     var endTime = lastCustomer.events[lastCustomer.events.length - 1];
     var done = false;
     var loops = 0;
+    // Offset the time based on the location's timezone, so events don't leak past midnight
     var currentTime = offsetDate(new Date(Date.UTC(startTime.getUTCFullYear(), startTime.getUTCMonth(), startTime.getUTCDate(), 0)));
+
+    // Build buckets until you have a bucket for the latest event or you hit 100
     while (!done && loops < 100) {
       if (currentTime <= endTime) {
         var bucket = {
@@ -201,13 +205,14 @@ function generateCharts(customers) {
     data.periods = buckets.length;
   }
 
+  // Put customer data into the correct bucket based on the bucket's start time
   function attachCustomerData() {
     for (var i = 0; i < customers.length; i++) {
       var customer = customers[i];
       for (var j = 0; j < buckets.length; j++) {
         var bucket = buckets[j];
         if (customer.events[0].getTime() >= bucket.date.getTime() && customer.events[0].getTime() < bucket.date.getTime() + 1000 * 60 * 60 * 24) {
-          var duration = (customer.events[customer.events.length - 1].getTime() - customer.events[0].getTime())/60;
+          var duration = (customer.events[customer.events.length - 1].getTime() - customer.events[0].getTime()) / 60;
           bucket.data.engagementTotal += duration;
           data.totalEngagement += duration;
           bucket.data.customerCount++;
@@ -217,6 +222,7 @@ function generateCharts(customers) {
     }
   }
 
+  // Compile bucket data into Chart.js format
   function populateChartData() {
     for (var j = 0; j < buckets.length; j++) {
       var bucket = buckets[j];
@@ -231,6 +237,7 @@ function generateCharts(customers) {
     return true;
   }
 
+  // Build Chart object with Chart.js
   function buildChart() {
     var ctx = document.getElementById("engagement-chart");
     ctx.getContext("2d").height = 500;
@@ -259,15 +266,15 @@ function generateCharts(customers) {
 }
 
 
-// Use combine existing data to store metrics
-function calculateMetrics(){
+// Combine existing data to store metrics
+function calculateMetrics() {
   data.totalCustomers = data.cleaned.passed;
-  data.outputs.dailyCustomers = data.totalCustomers/data.periods;
-  data.outputs.averageEngagement = data.totalEngagement/data.totalCustomers/60;
+  data.outputs.dailyCustomers = data.totalCustomers / data.periods;
+  data.outputs.averageEngagement = data.totalEngagement / data.totalCustomers / 60;
   data.outputs.dateRange = '' + chartData.labels[0] + ' - ' + chartData.labels[chartData.labels.length - 1];
 }
 
-function updateDOM(){
+function updateDOM() {
   var dateRange = document.getElementById("data-date-range");
   var customerAverage = document.getElementById("data-customer-average");
   var engagement = document.getElementById("data-engagement");
