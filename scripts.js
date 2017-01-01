@@ -171,7 +171,7 @@ function generateCharts(customers) {
       yAxisID: 'A',
       data: []
     }, {
-      label: 'Average Engagement Duration (minutes)',
+      label: 'Average Engagement (seconds)',
       backgroundColor: config.colors[1],
       yAxisID: 'B',
       data: []
@@ -232,7 +232,7 @@ function generateCharts(customers) {
       for (var j = 0; j < buckets.length; j++) {
         var bucket = buckets[j];
         if (customer.events[0].getTime() >= bucket.date.getTime() && customer.events[0].getTime() < bucket.date.getTime() + 1000 * 60 * 60 * 24) {
-          var duration = (customer.events[customer.events.length - 1].getTime() - customer.events[0].getTime()) / 60;
+          var duration = (customer.events[customer.events.length - 1].getTime() - customer.events[0].getTime());
           bucket.data.engagementTotal += duration;
           data.totalEngagement += duration;
           bucket.data.customerCount++;
@@ -249,7 +249,7 @@ function generateCharts(customers) {
       chartData.labels.push(bucket.label);
       chartData.datasets[0].data.push(bucket.data.customerCount);
       if (bucket.data.customerCount > 0) {
-        chartData.datasets[1].data.push(Math.floor(bucket.data.engagementTotal / bucket.data.customerCount / 60));
+        chartData.datasets[1].data.push(Math.floor(bucket.data.engagementTotal / bucket.data.customerCount / 1000));
       } else {
         chartData.datasets[1].data.push(0);
       }
@@ -268,14 +268,25 @@ function generateCharts(customers) {
         responsive: true,
         maintainAspectRatio: false,
         scales: {
+          xAxes:[{
+            gridLines: {
+              display: false
+            }
+          }],
           yAxes: [{
             id: 'A',
             type: 'linear',
             position: 'left',
+            gridLines: {
+              display: false
+            }
           }, {
             id: 'B',
             type: 'linear',
-            position: 'right'
+            position: 'right',
+            gridLines: {
+              display: false
+            }
           }]
         }
       }
@@ -290,7 +301,7 @@ function generateCharts(customers) {
 function calculateMetrics() {
   data.totalCustomers = data.cleaned.passed;
   data.outputs.dailyCustomers = data.totalCustomers / data.periods;
-  data.outputs.averageEngagement = data.totalEngagement / data.totalCustomers / 60;
+  data.outputs.averageEngagement = data.totalEngagement / data.totalCustomers / 1000;
   data.outputs.dateRange = '' + chartData.labels[0] + ' - ' + chartData.labels[chartData.labels.length - 1];
 }
 
@@ -305,7 +316,7 @@ function updateDOM() {
 
   dateRange.innerHTML = data.outputs.dateRange || 'None';
   customerAverage.innerHTML = Math.floor(data.outputs.dailyCustomers) || 0;
-  engagement.innerHTML = (Math.floor(data.outputs.averageEngagement) || 0) + ' mins';
+  engagement.innerHTML = (Math.floor(data.outputs.averageEngagement) || 0) + ' seconds';
   parsePassed.innerHTML = data.parsed.passed;
   parseFailed.innerHTML = data.parsed.failed;
   sensorPassed.innerHTML = data.cleaned.passed;
