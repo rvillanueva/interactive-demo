@@ -74,6 +74,7 @@ function processInput(text) {
 
   var eventLog = parseEventLog(text);
   var allCustomers = splitCustomers(eventLog);
+  console.log(allCustomers);
   if(allCustomers.length > 0){
     var customers = clearSensorErrors(allCustomers);
     generateCharts(customers);
@@ -86,10 +87,10 @@ function processInput(text) {
     var split = input.split('\n');
     var arr = [];
     for (var i = 0; i < split.length; i++) {
-      var string = split[i] + 'Z'; // setting these times are UTC, because it would be weird for people to be interacting at 2am Eastern
-      var date = new Date(string);
+      var string = split[i]; // setting these times are UTC, because it would be weird for people to be interacting at 2am Eastern
+      var date = new Date(string + 'Z');
       if(isNaN(date)){
-        date = parseDate(split[i]);
+        date = parseDate(string);
       }
       // Update data log
       if (!isNaN(date)) {
@@ -101,14 +102,18 @@ function processInput(text) {
     return arr;
 
     function parseDate(str){
-      var year = str.substring(0,4);
-      var month = str.substring(5, 7);
-      var day = str.substring(8, 10);
-      var hour = str.substring(11, 13);
-      var minute = str.substring(14, 16);
-      var seconds = str.substring(17, 19);
-      var ms = str.substring(20, str.length);
-      return new Date(Date.UTC(year, month, day, hour, minute, seconds, ms));
+      if(str.length > 20){
+        var year = str.substring(0,4);
+        var month = str.substring(5, 7);
+        var day = str.substring(8, 10);
+        var hour = str.substring(11, 13);
+        var minute = str.substring(14, 16);
+        var seconds = str.substring(17, 19);
+        var ms = str.substring(20, str.length);
+        return new Date(Date.UTC(year, month, day, hour, minute, seconds, ms));
+      } else {
+        return null;
+      }
     }
   }
 
