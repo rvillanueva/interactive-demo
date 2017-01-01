@@ -86,8 +86,8 @@ function processInput(text) {
     var split = input.split('\n');
     var arr = [];
     for (var i = 0; i < split.length; i++) {
-      var string = split[i] + 'z'; // setting these times are UTC, because it would be weird for people to be interacting at 2am Eastern
-      var date = moment(string).toDate();
+      var string = split[i] + 'Z'; // setting these times are UTC, because it would be weird for people to be interacting at 2am Eastern
+      var date = new Date(string);
       // Update data log
       if (!isNaN(date)) {
         arr.push(date);
