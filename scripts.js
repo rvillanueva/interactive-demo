@@ -66,17 +66,19 @@ function processInput(text) {
     totalEngagement: 0,
     periods: 0,
     outputs: {
-      dateRange: '',
-      dailyCustomers: '',
-      averageEngagement: ''
+      dateRange: null,
+      dailyCustomers: null,
+      averageEngagement: null
     }
   };
 
   var eventLog = parseEventLog(text);
   var allCustomers = splitCustomers(eventLog);
-  var customers = clearSensorErrors(allCustomers);
-  generateCharts(customers);
-  calculateMetrics();
+  if(allCustomers.length > 0){
+    var customers = clearSensorErrors(allCustomers);
+    generateCharts(customers);
+    calculateMetrics();
+  }
   updateDOM();
 
   // Convert the raw text into an array of Dates
@@ -283,9 +285,9 @@ function updateDOM() {
   var sensorPassed = document.getElementById("sensor-passed");
   var sensorFailed = document.getElementById("sensor-failed");
 
-  dateRange.innerHTML = data.outputs.dateRange;
-  customerAverage.innerHTML = Math.floor(data.outputs.dailyCustomers);
-  engagement.innerHTML = Math.floor(data.outputs.averageEngagement) + ' mins';
+  dateRange.innerHTML = data.outputs.dateRange || 'None';
+  customerAverage.innerHTML = Math.floor(data.outputs.dailyCustomers) || 0;
+  engagement.innerHTML = Math.floor(data.outputs.averageEngagement) || 0 + ' mins';
   parsePassed.innerHTML = data.parsed.passed;
   parseFailed.innerHTML = data.parsed.failed;
   sensorPassed.innerHTML = data.cleaned.passed;
