@@ -305,7 +305,7 @@ function updateDOM() {
 
   dateRange.innerHTML = data.outputs.dateRange || 'None';
   customerAverage.innerHTML = Math.floor(data.outputs.dailyCustomers) || 0;
-  engagement.innerHTML = Math.floor(data.outputs.averageEngagement) || 0 + ' mins';
+  engagement.innerHTML = (Math.floor(data.outputs.averageEngagement) || 0) + ' mins';
   parsePassed.innerHTML = data.parsed.passed;
   parseFailed.innerHTML = data.parsed.failed;
   sensorPassed.innerHTML = data.cleaned.passed;
