@@ -16,7 +16,7 @@ var data, chartData, chart;
 
 function loadEvents(done) {
   var client = new XMLHttpRequest();
-  client.open('GET', '/interactive-demo/events_output.txt');
+  client.open('GET', 'events_output.txt');
   client.onreadystatechange = function() {
     if (client.readyState == 4 && client.status == 200 && client.responseText) {
       done(client.responseText);
@@ -73,6 +73,7 @@ function processInput(text) {
   };
 
   var eventLog = parseEventLog(text);
+  console.log(eventLog);
   var allCustomers = splitCustomers(eventLog);
   console.log(allCustomers);
   if(allCustomers.length > 0){
@@ -89,13 +90,12 @@ function processInput(text) {
     for (var i = 0; i < split.length; i++) {
       var string = split[i]; // setting these times are UTC, because it would be weird for people to be interacting at 2am Eastern
       var date = new Date(string + 'Z');
-      console.log(date)
       if(isNaN(date)){
         date = parseDate(string);
       }
-      console.log(date);
       // Update data log
       if (!isNaN(date)) {
+        arr.push(date);
         data.parsed.passed++;
       } else {
         data.parsed.failed++;
