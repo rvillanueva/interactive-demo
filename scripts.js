@@ -74,7 +74,7 @@ function processInput(text) {
 
   var eventLog = parseEventLog(text);
   var allCustomers = splitCustomers(eventLog);
-  if(allCustomers.length > 0){
+  if (allCustomers.length > 0) {
     var customers = clearSensorErrors(allCustomers);
     generateCharts(customers);
     calculateMetrics();
@@ -88,7 +88,7 @@ function processInput(text) {
     for (var i = 0; i < split.length; i++) {
       var string = split[i]; // setting these times are UTC, because it would be weird for people to be interacting at 2am Eastern
       var date = new Date(string + 'Z');
-      if(isNaN(date)){
+      if (isNaN(date)) {
         date = parseDate(string);
       }
       // Update data log
@@ -101,15 +101,15 @@ function processInput(text) {
     }
     return arr;
 
-    function parseDate(str){
-      if(str.length > 20){
-        var year = str.substring(0,4);
-        var month = str.substring(5, 7);
-        var day = str.substring(8, 10);
-        var hour = str.substring(11, 13);
-        var minute = str.substring(14, 16);
-        var seconds = str.substring(17, 19);
-        var ms = str.substring(20, str.length);
+    function parseDate(str) {
+      if (str.length > 20) {
+        var year = Number(str.substring(0, 4));
+        var month = Number(str.substring(5, 7)) - 1;
+        var day = Number(str.substring(8, 10));
+        var hour = Number(str.substring(11, 13));
+        var minute = Number(str.substring(14, 16));
+        var seconds = Number(str.substring(17, 19));
+        var ms = Number(str.substring(19, str.length)) * 10;
         return new Date(Date.UTC(year, month, day, hour, minute, seconds, ms));
       } else {
         return 'NaN';
