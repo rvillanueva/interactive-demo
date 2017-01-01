@@ -73,9 +73,7 @@ function processInput(text) {
   };
 
   var eventLog = parseEventLog(text);
-  console.log(eventLog);
   var allCustomers = splitCustomers(eventLog);
-  console.log(allCustomers);
   if(allCustomers.length > 0){
     var customers = clearSensorErrors(allCustomers);
     generateCharts(customers);
@@ -114,7 +112,7 @@ function processInput(text) {
         var ms = str.substring(20, str.length);
         return new Date(Date.UTC(year, month, day, hour, minute, seconds, ms));
       } else {
-        return null;
+        return 'NaN';
       }
     }
   }
