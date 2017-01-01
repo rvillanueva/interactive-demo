@@ -89,9 +89,11 @@ function processInput(text) {
     for (var i = 0; i < split.length; i++) {
       var string = split[i]; // setting these times are UTC, because it would be weird for people to be interacting at 2am Eastern
       var date = new Date(string + 'Z');
+      console.log(date)
       if(isNaN(date)){
         date = parseDate(string);
       }
+      console.log(date);
       // Update data log
       if (!isNaN(date)) {
         data.parsed.passed++;
